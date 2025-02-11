@@ -1,25 +1,29 @@
+import os
 import time
 import requests
 from datetime import datetime, timedelta
 import pytz
 
-# 🔹 Telegram Bot Credentials
-# TELEGRAM_TOKEN = "jdflkjsdlkfj"
-# CHAT_ID = "00000"
+# 🔹 Use Environment Variables
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
+CHAT_ID = os.getenv("CHAT_ID")
 
 # 🔹 Define Trading Session Timings (Pakistan Time - UTC+5)
 LONDON_OPEN = "13:00"  # 1:00 PM PKT
 NEW_YORK_OPEN = "17:00"  # 5:00 PM PKT
 
 # 🔹 Function to Send Telegram Alerts
-
 def send_telegram_message(message):
-    print(f"Sending message: {message}")  # Debug print
+    if not TELEGRAM_TOKEN or not CHAT_ID:
+        print("❌ ERROR: Missing TELEGRAM_TOKEN or CHAT_ID")
+        return
+
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
     payload = {"chat_id": CHAT_ID, "text": message}
     response = requests.post(url, json=payload)
-    print(f"Response: {response.status_code}, {response.text}")  # Debug response
 
+    if response.status_code != 200:
+        print(f"❌ Telegram Error: {response.text}")
 
 # 🔹 Function to Check Time and Send Alerts
 def check_trading_sessions():
@@ -43,23 +47,3 @@ send_telegram_message("✅ Trading Alert Bot is now running and checking for tra
 while True:
     check_trading_sessions()
     time.sleep(60)  # Check every minute
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"""
-You can directly send message to your bot from the browser using below link
-https://api.telegram.org/botyour_telegram_bot_token/sendMessage?chat_id=your_chat_id_here&text=Test
-https://api.telegram.org/bot7657132098:AAFm36C0LwIlEpzq5Gg_ayzem1_96EbooJM/sendMessage?chat_id=7425571871&text=Test
-"""
