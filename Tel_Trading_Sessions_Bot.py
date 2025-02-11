@@ -12,10 +12,14 @@ LONDON_OPEN = "13:00"  # 1:00 PM PKT
 NEW_YORK_OPEN = "17:00"  # 5:00 PM PKT
 
 # 🔹 Function to Send Telegram Alerts
+
 def send_telegram_message(message):
+    print(f"Sending message: {message}")  # Debug print
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
     payload = {"chat_id": CHAT_ID, "text": message}
-    requests.post(url, json=payload)
+    response = requests.post(url, json=payload)
+    print(f"Response: {response.status_code}, {response.text}")  # Debug response
+
 
 # 🔹 Function to Check Time and Send Alerts
 def check_trading_sessions():
